@@ -2,4 +2,7 @@ source-content.txt
 prepare_content.py
 .DS_Store
 node_modules/
+.vercel/
+.env
+.env.*
 *.tar.gz
