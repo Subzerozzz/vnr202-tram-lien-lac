@@ -44,7 +44,7 @@ export class RadioAudio {
     this.enabled = true;
     this.activated = false;
     this.visible = true;
-    this.home = false;
+    this.ambient = false;
     this.speaking = false;
     this.context = null;
     this.master = null;
@@ -78,12 +78,12 @@ export class RadioAudio {
     this.sync();
   }
 
-  setHome(home) {
-    if (this.home && !home) this.silence();
-    this.home = home;
+  setAmbient(active) {
+    if (this.ambient && !active) this.silence();
+    this.ambient = active;
     this.sync();
   }
-  setSpeaking(speaking) { this.speaking = speaking; this.sync(); }
+  setSpeaking(speaking) { if (speaking) this.silence(); this.speaking = speaking; this.sync(); }
   setVisible(visible) {
     this.visible = visible;
     if (!visible) {
@@ -94,11 +94,11 @@ export class RadioAudio {
   }
 
   sync() {
-    const ambient = this.ready && this.home && !this.speaking;
+    const ambient = this.ready && this.ambient && !this.speaking;
     if (!ambient) {
       if (this.loop !== null) this.cancel(this.loop);
       this.loop = null;
-    } else if (this.loop === null) this.homeCycle();
+    } else if (this.loop === null) this.ambientCycle();
     this.onState();
   }
 
@@ -131,15 +131,15 @@ export class RadioAudio {
     if (!this.ready) return;
     let time = this.context.currentTime + .04;
     for (const duration of [.075, .22, .075, .075]) {
-      this.beep(quiet ? 620 : 650, time, duration, quiet ? .012 : .025);
+      this.beep(quiet ? 620 : 650, time, duration, quiet ? .018 : .025);
       time += duration + .1;
     }
   }
 
-  homeCycle() {
-    if (!this.ready || !this.home || this.speaking) return;
+  ambientCycle() {
+    if (!this.ready || !this.ambient || this.speaking) return;
     this.morse(true);
-    this.loop = this.schedule(() => { this.loop = null; this.homeCycle(); }, 6200);
+    this.loop = this.schedule(() => { this.loop = null; this.ambientCycle(); }, 6200);
   }
 
   tone(kind) {

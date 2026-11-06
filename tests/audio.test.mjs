@@ -36,7 +36,7 @@ test('spoken dates, abbreviations and sentence boundaries are readable', () => {
   assert.match(sentences[2],/Đại hội ba xây dựng chủ nghĩa xã hội/);
 });
 
-test('home audio waits for interaction, creates one loop, and stops on mute or navigation', async () => {
+test('radio audio waits for interaction, keeps one loop, and pauses for narration or mute', async () => {
   const timers=clock(), oscillators=[];
   const context={state:'suspended',currentTime:0,destination:{},
     resume(){this.state='running';return Promise.resolve();},
@@ -46,24 +46,29 @@ test('home audio waits for interaction, creates one loop, and stops on mute or n
   };
   let created=0;
   const radio=new RadioAudio({createContext:()=>{created++;return context;},schedule:timers.schedule,cancel:timers.cancel});
-  radio.setHome(true);
+  radio.setAmbient(true);
   assert.equal(created,0);
   assert.equal(timers.tasks.size,0);
   radio.activate();await Promise.resolve();
   assert.equal(radio.ready,true);
   assert.equal(timers.tasks.size,1);
   assert.equal(oscillators.length,4);
-  radio.setHome(true);radio.activate();
+  radio.setAmbient(true);radio.activate();
+  assert.equal(timers.tasks.size,1);
+  radio.setSpeaking(true);
+  assert.equal(timers.tasks.size,0);
+  assert.equal(radio.sources.size,0);
+  radio.setSpeaking(false);
   assert.equal(timers.tasks.size,1);
   radio.setEnabled(false);
   assert.equal(timers.tasks.size,0);
   assert.equal(radio.sources.size,0);
   radio.setEnabled(true);
   assert.equal(timers.tasks.size,1);
-  radio.setHome(false);
+  radio.setAmbient(false);
   assert.equal(timers.tasks.size,0);
   assert.equal(radio.sources.size,0);
-  radio.setHome(true);radio.setVisible(false);
+  radio.setAmbient(true);radio.setVisible(false);
   assert.equal(timers.tasks.size,0);
   assert.equal(radio.ready,false);
 });
