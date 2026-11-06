@@ -131,7 +131,7 @@ export class RadioAudio {
     if (!this.ready) return;
     let time = this.context.currentTime + .04;
     for (const duration of [.075, .22, .075, .075]) {
-      this.beep(quiet ? 620 : 650, time, duration, quiet ? .018 : .025);
+      this.beep(quiet ? 620 : 650, time, duration, quiet ? .04 : .045);
       time += duration + .1;
     }
   }
@@ -139,7 +139,7 @@ export class RadioAudio {
   ambientCycle() {
     if (!this.ready || !this.ambient || this.speaking) return;
     this.morse(true);
-    this.loop = this.schedule(() => { this.loop = null; this.ambientCycle(); }, 6200);
+    this.loop = this.schedule(() => { this.loop = null; this.ambientCycle(); }, 3800);
   }
 
   tone(kind) {
