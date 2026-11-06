@@ -28,7 +28,7 @@ Mã nguồn không có cổng đăng nhập ChatGPT. Quyền truy cập bản tr
 
 Luồng: chọn trạm → chọn đáp án → xác nhận → đúng/sai → mở từ khóa và giải thích → trạm tiếp theo. Tiến độ lưu trong localStorage trên trình duyệt, không đồng bộ tài khoản.
 
-Có âm Morse, âm xác nhận, bản chép lời, giảm chuyển động, điều khiển bàn phím và giao diện mobile. Âm thanh mặc định bật, bắt đầu sau tương tác đầu tiên theo chính sách autoplay của trình duyệt. Trang chủ và các trạm giải mã phát Morse nhỏ theo chu kỳ; nút loa toàn trang tắt cả tiếng vô tuyến, hiệu ứng và lời đọc, đồng thời lưu lựa chọn. Tiếng vô tuyến tạm dừng khi đọc tổng kết, khi vào các trang khác hoặc khi ẩn tab.
+Có âm Morse, âm xác nhận, bản chép lời, giảm chuyển động, điều khiển bàn phím và giao diện mobile. Mỗi lần mở hoặc tải lại trang, âm thanh mặc định bật và thử tự phát. Nếu trình duyệt chặn autoplay, âm thanh tự bắt đầu sau thao tác đầu tiên ở bất kỳ đâu trên trang, không cần nút nghe riêng. Trang chủ và các trạm giải mã phát Morse nhỏ theo chu kỳ; nút loa toàn trang tắt cả tiếng vô tuyến, hiệu ứng và lời đọc, áp dụng trong lần mở trang hiện tại. Tải lại trang sẽ mặc định bật lại âm thanh. Tiếng vô tuyến tạm dừng khi đọc tổng kết, khi vào các trang khác hoặc khi ẩn tab.
 
 Khi hoàn thành trạm và âm thanh đang bật, phần tổng kết được đọc sau tiếng xác nhận. Bộ đọc ưu tiên giọng tiếng Việt chất lượng cao khi thiết bị hỗ trợ, có chọn giọng và hai cách đọc: kể chuyện tự nhiên hoặc truyền tin trang trọng. Văn bản được chia thành câu, có nhịp nghỉ và chuẩn hóa cách đọc ngày tháng. Lời đọc vẫn dùng Speech Synthesis của trình duyệt; chất giọng phụ thuộc các giọng có trên thiết bị, không phải bản thu AI riêng.
 

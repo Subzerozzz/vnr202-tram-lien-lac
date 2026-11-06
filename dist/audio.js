@@ -1,8 +1,8 @@
-// Audio stays dormant until a real interaction unlocks the browser's audio context.
+// Attempt normal autoplay; retry on interaction when the browser suspends audio.
 export function audioPreferences(value = {}) {
   return {
-    audioVersion: 2,
-    sound: value.audioVersion === 2 ? value.sound !== false : true,
+    audioVersion: 3,
+    sound: true,
     voice: typeof value.voice === 'string' ? value.voice : 'auto',
     narrationStyle: value.narrationStyle === 'broadcast' ? 'broadcast' : 'natural',
   };
@@ -65,7 +65,7 @@ export class RadioAudio {
         this.context.onstatechange = () => this.sync();
       }
       this.activated = true;
-      // resume() is invoked inside the user's gesture, before awaiting anything.
+      // A blocked autoplay request is retried synchronously on the first gesture.
       const pending = this.context.state !== 'running' ? this.context.resume() : null;
       this.sync();
       pending?.then(() => this.sync()).catch(() => this.onState());

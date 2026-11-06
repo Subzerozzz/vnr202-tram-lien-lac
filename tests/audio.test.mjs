@@ -12,11 +12,32 @@ function clock() {
   };
 }
 
-test('new and legacy saves enable sound; a new explicit mute remains muted', () => {
+test('every new page load enables sound, including previously muted saves', () => {
   assert.equal(audioPreferences().sound, true);
   assert.equal(audioPreferences({sound:false,version:1}).sound, true);
-  assert.equal(audioPreferences({audioVersion:2,sound:false}).sound, false);
+  assert.equal(audioPreferences({audioVersion:2,sound:false}).sound, true);
+  assert.equal(audioPreferences({audioVersion:3,sound:false}).sound, true);
   assert.equal(audioPreferences({audioVersion:2,voice:'Linh',narrationStyle:'broadcast'}).voice, 'Linh');
+});
+
+test('blocked autoplay stays quiet and starts a single loop when the context is allowed', async () => {
+  const timers=clock();let beeps=0;
+  const context={state:'suspended',currentTime:0,destination:{},
+    resume:()=>Promise.resolve(),
+    createGain:()=>({gain:{value:0,setValueAtTime(){},linearRampToValueAtTime(){}},connect(){},disconnect(){}}),
+    createOscillator:()=>({frequency:{value:0},connect(){},disconnect(){},start(){beeps++;},stop(){}}),
+  };
+  const radio=new RadioAudio({createContext:()=>context,schedule:timers.schedule,cancel:timers.cancel});
+  radio.setAmbient(true);radio.activate();await Promise.resolve();
+  assert.equal(radio.enabled,true);
+  assert.equal(radio.ready,false);
+  assert.equal(beeps,0);
+  assert.equal(timers.tasks.size,0);
+  context.state='running';radio.activate();
+  assert.equal(radio.ready,true);
+  assert.equal(beeps,4);
+  assert.equal(timers.tasks.size,1);
+  radio.activate();assert.equal(timers.tasks.size,1);
 });
 
 test('automatic voice selection prefers high quality Vietnamese, not English', () => {
